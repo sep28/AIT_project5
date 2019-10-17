@@ -1,17 +1,16 @@
 // app.js
 
-const myDb = require('./db');
-const mongoose = require('mongoose');
-const Review = mongoose.model('Review');
 const express = require('express');
 const app = express();
 const path = require("path");
-
+require('./db');
+const mongoose = require('mongoose');
+//mongoose.Promise = global.Promise;
+const Review = mongoose.model('Review');
 const publicPath = path.resolve(__dirname, "public");
-app.use(express.static(publicPath));
 
-app.set('view engine', 'hbs');
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended: true}));
+
 app.use(function(req, res, next) {
 	console.log("Method: " + req.method + "\n");
 	console.log("Path: " + req.path + "\n");
@@ -19,6 +18,21 @@ app.use(function(req, res, next) {
 	console.log(req.query);
 	console.log("\n");
 	next();
+});
+
+app.use(express.static(publicPath));
+
+app.set('view engine', 'hbs');
+app.get("/", (req, res) => {
+	Review.find({}, function(err, result, count) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+		console.log(result);
+		res.render('allreviews', {dataEntry: result});
+		//res.render('layout', 'body':'hello');
+	});
 });
 
 

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+mongoose.Promise = global.Promise;
 
 // my schema goes here!!
 const Review = new mongoose.Schema ({
@@ -12,7 +13,7 @@ const Review = new mongoose.Schema ({
 });
 
 
-mongoose.model('Review', Review);
+module.exports = mongoose.model('Review', Review);
 
 
-mongoose.connect('mongodb://localhost/hw05');
+mongoose.connect('mongodb://localhost/hw05', { useNewUrlParser: true, useUnifiedTopology: true })
